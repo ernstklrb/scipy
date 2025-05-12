@@ -1020,7 +1020,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1056,7 +1056,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1071,7 +1071,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1106,7 +1106,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1124,7 +1124,7 @@ class DifferentialEvolutionSolver:
         The standard deviation of the population energies divided by their
         mean.
         """
-        if np.any(np.isinf(self.population_energies)):
+        if np.any(self.population_energies == np.inf) or (np.any(self.population_energies == None)):
             return np.inf
         return (np.std(self.population_energies) /
                 (np.abs(np.mean(self.population_energies)) + _MACHEPS))
@@ -1133,7 +1133,7 @@ class DifferentialEvolutionSolver:
         """
         Return True if the solver has converged.
         """
-        if np.any(np.isinf(self.population_energies)):
+        if np.any(self.population_energies == np.inf) or (np.any(self.population_energies == None)):
             return False
 
         return (np.std(self.population_energies) <=
@@ -1164,11 +1164,11 @@ class DifferentialEvolutionSolver:
         status_message = _status_message['success']
 
         # The population may have just been initialized (all entries are
-        # np.inf). If it has you have to calculate the initial energies.
+        # None). If it has you have to calculate the initial energies.
         # Although this is also done in the evolve generator it's possible
         # that someone can set maxiter=0, at which point we still want the
         # initial energies to be calculated (the following loop isn't run).
-        if np.all(np.isinf(self.population_energies)):
+        if np.all(self.population_energies == None):
             self.feasible, self.constraint_violation = (
                 self._calculate_population_feasibilities(self.population))
 
@@ -1176,6 +1176,8 @@ class DifferentialEvolutionSolver:
             self.population_energies[self.feasible] = (
                 self._calculate_population_energies(
                     self.population[self.feasible]))
+
+            self.population_energies[~self.feasible] = np.inf
 
             self._promote_lowest_energy()
 
@@ -1553,8 +1555,8 @@ class DifferentialEvolutionSolver:
             Value of objective function obtained from the best solution.
         """
         # the population may have just been initialized (all entries are
-        # np.inf). If it has you have to calculate the initial energies
-        if np.all(np.isinf(self.population_energies)):
+        # None). If it has you have to calculate the initial energies
+        if np.all(self.population_energies == None):
             self.feasible, self.constraint_violation = (
                 self._calculate_population_feasibilities(self.population))
 
@@ -1563,6 +1565,8 @@ class DifferentialEvolutionSolver:
             self.population_energies[self.feasible] = (
                 self._calculate_population_energies(
                     self.population[self.feasible]))
+
+            self.population_energies[~self.population_energies] = np.inf
 
             self._promote_lowest_energy()
 
