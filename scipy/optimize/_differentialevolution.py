@@ -1020,7 +1020,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1056,7 +1056,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1071,7 +1071,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1106,7 +1106,7 @@ class DifferentialEvolutionSolver:
 
         # reset population energies
         self.population_energies = np.full(self.num_population_members,
-                                           np.inf)
+                                           None)
 
         # reset number of function evaluations counter
         self._nfev = 0
@@ -1553,8 +1553,8 @@ class DifferentialEvolutionSolver:
             Value of objective function obtained from the best solution.
         """
         # the population may have just been initialized (all entries are
-        # np.inf). If it has you have to calculate the initial energies
-        if np.all(np.isinf(self.population_energies)):
+        # None). If it has you have to calculate the initial energies
+        if np.all(self.population_energies == None)):
             self.feasible, self.constraint_violation = (
                 self._calculate_population_feasibilities(self.population))
 
